@@ -1,1 +1,137 @@
-Dim bigDelay = 12000, smallDelay = 5000Function 结束战斗()	TracePrint "执行结束战斗"	Delay 2000	Tap 200, 200	Delay 2000	Tap 200, 200	Delay 2000	Tap 200, 200End FunctionFunction 判断战斗结束()	//先战斗一会	Delay bigDelay	Dim intX,intY	Do		FindMultiColor 0,0,0,0,"111B94","64|0|5A8AA3,238|0|75A8C1,385|-22|9DC9DD",0,0.9,intX,intY		If intX > -1 And intY > -1 Then			TracePrint "找到战斗结束图像：" & intX & " " & intY			Exit Do		Else 			Delay smallDelay		End If	Loop	Delay smallDelayEnd FunctionFunction 探索小怪()	//寻找小怪	Dim monsterX, monsterY	FindMultiColor 0,0,0,0,"FFF9FD","1|36|E0F3F8,12|33|DFF2F7,0|-13|172441,-10|10|CBB7B9",0,0.9,monsterX,monsterY	If monsterX > -1 And monsterY > -1 Then		TracePrint "找到小怪：" & monsterX & " " & monsterY		//找到小怪，点击战斗按钮		Tap monsterX, monsterY		Delay bigDelay		//点击准备按钮		Tap 917, 455		//等待结束战斗		判断战斗结束() 		Call 结束战斗()		//战斗结束		探索小怪 = True	Else 		探索小怪 = False	End IfEnd FunctionFunction 探索boss()	//寻找BOSS	Dim monsterX, monsterY	FindMultiColor 0,0,0,0,"1014EB","-11|31|1014EF,-22|44|1010E7,19|33|0D11C3",0,0.9,monsterX,monsterY	If monsterX > -1 And monsterY > -1 Then 		TracePrint "发现BOSS" & monsterX & " " & monsterY		//找到boss，进入战斗		Tap monsterX, monsterY		Delay bigDelay		//默认点击下准备		Tap 917, 455		//判断是否结束战斗		判断战斗结束()		Call 结束战斗()		Delay bigDelay		Delay smallDelay		Call 获取探索战利品()		//战斗结束		探索boss = True	Else 		探索boss = False	End IfEnd FunctionFunction 获取探索战利品()	Dim intX,intY	Do		FindMultiColor 0,0,0,0,"102E79","-11|-7|D1FBFF,9|-7|D1F7FF,10|7|D3F6FF,-10|7|D6F7FF,3|-13|0A2D65",0,0.9,intX,intY		If intX > -1 And intY > -1 Then			TracePrint "找到战利品：" & intX & intY			//点击战利品			Tap intX, intY			//点击关闭战利品页面			Delay 8000			Tap intX, intY			Delay smallDelay		Else 			Exit Do		End If	LoopEnd FunctionFunction 探索(章节, 难度)    TracePrint "探索" & 章节    ShowMessage "探索" & 章节    Delay smallDelay    //选择章节    For 章节 - 1    	Swipe 995, 200, 995, 120, 200    	Delay 300    Next    //点击相应的章节    Tap 937, 153    Delay smallDelay    TracePrint "选择章节结束"    //选择难度    If 难度 = "普通" Then     	Tap 272, 187		Delay 500		Tap 760, 438	Else 		Tap 378, 187		Delay 500		Tap 760, 438    End If    //加载战斗场景    Delay bigDelay    //杀怪    TracePrint "开始杀怪！"    Do    	Dim 结果    	结果 = 探索boss()    	If 结果 = True Then     		TracePrint "BOSS已死"    		Exit Do    	End If    	结果 = 探索小怪()    	If 结果 = False Then     		//如果找不到拖动屏幕    		TracePrint "未发现小怪，拖动屏幕"    		Tap 510, 300    		Swipe 500, 160, 0, 160    	Else     		Delay bigDelay    	End If    Loop    Delay bigDelay    探索 = TrueEnd FunctionDo	探索(1, "普通")Loop//Call 获取探索战利品()
+Dim bigDelay = 12000, smallDelay = 5000
+Function 结束战斗()
+	TracePrint "执行结束战斗"
+	Delay 2000
+	Tap 200, 200
+	Delay 2000
+	Tap 200, 200
+	Delay 2000
+	Tap 200, 200
+End Function
+Function 判断战斗结束()
+	//先战斗一会
+	Delay bigDelay
+	Dim intX,intY
+	Do
+		FindMultiColor 0,0,0,0,"111B94","64|0|5A8AA3,238|0|75A8C1,385|-22|9DC9DD",0,0.9,intX,intY
+		If intX > -1 And intY > -1 Then
+			TracePrint "找到战斗结束图像：" & intX & " " & intY
+			Exit Do
+		Else 
+			Delay smallDelay
+		End If
+	Loop
+	Delay smallDelay
+End Function
+Function 探索小怪()
+	//寻找小怪
+	Dim monsterX, monsterY
+	FindMultiColor 0,0,0,0,"FFF9FD","1|36|E0F3F8,12|33|DFF2F7,0|-13|172441,-10|10|CBB7B9",0,0.9,monsterX,monsterY
+	If monsterX > -1 And monsterY > -1 Then
+		TracePrint "找到小怪：" & monsterX & " " & monsterY
+		//找到小怪，点击战斗按钮
+		Tap monsterX, monsterY
+		Delay bigDelay
+		//点击准备按钮
+		Tap 917, 455
+		//等待结束战斗
+		判断战斗结束() 
+		Call 结束战斗()
+		//战斗结束
+		探索小怪 = True
+	Else 
+		探索小怪 = False
+	End If
+End Function
+Function 探索boss()
+	//寻找BOSS
+	Dim monsterX, monsterY
+	FindMultiColor 0,0,0,0,"1014EB","-11|31|1014EF,-22|44|1010E7,19|33|0D11C3",0,0.9,monsterX,monsterY
+	If monsterX > -1 And monsterY > -1 Then 
+		TracePrint "发现BOSS" & monsterX & " " & monsterY
+		//找到boss，进入战斗
+		Tap monsterX, monsterY
+		Delay bigDelay
+		//默认点击下准备
+		Tap 917, 455
+		//判断是否结束战斗
+		判断战斗结束()
+		Call 结束战斗()
+		Delay bigDelay
+		Delay smallDelay
+		Call 获取探索战利品()
+		//战斗结束
+		探索boss = True
+	Else 
+		探索boss = False
+	End If
+End Function
+Function 获取探索战利品()
+	Dim intX,intY
+	Do
+		FindMultiColor 0,0,0,0,"102E79","-11|-7|D1FBFF,9|-7|D1F7FF,10|7|D3F6FF,-10|7|D6F7FF,3|-13|0A2D65",0,0.9,intX,intY
+		If intX > -1 And intY > -1 Then
+			TracePrint "找到战利品：" & intX & intY
+			//点击战利品
+			Tap intX, intY
+			//点击关闭战利品页面
+			Delay 8000
+			Tap intX, intY
+			Delay smallDelay
+		Else 
+			Exit Do
+		End If
+	Loop
+End Function
+Function 探索(章节, 难度)
+    TracePrint "探索" & 章节
+    ShowMessage "探索" & 章节
+    Delay smallDelay
+    //选择章节
+    For 章节 - 1
+    	Swipe 995, 200, 995, 120, 200
+    	Delay 300
+    Next
+    //点击相应的章节
+    Tap 937, 153
+    Delay smallDelay
+    TracePrint "选择章节结束"
+    //选择难度
+    If 难度 = "普通" Then 
+    	Tap 272, 187
+		Delay 500
+		Tap 760, 438
+	Else 
+		Tap 378, 187
+		Delay 500
+		Tap 760, 438
+    End If
+    //加载战斗场景
+    Delay bigDelay
+    //杀怪
+    TracePrint "开始杀怪！"
+    Do
+    	Dim 结果
+    	结果 = 探索boss()
+    	If 结果 = True Then 
+    		TracePrint "BOSS已死"
+    		Exit Do
+    	End If
+    	结果 = 探索小怪()
+    	If 结果 = False Then 
+    		//如果找不到拖动屏幕
+    		TracePrint "未发现小怪，拖动屏幕"
+    		Tap 510, 300
+    		Swipe 500, 160, 0, 160
+    	Else 
+    		Delay bigDelay
+    	End If
+    Loop
+    Delay bigDelay
+    探索 = True
+End Function
+
+Do
+	探索(1, "普通")
+Loop
+//Call 获取探索战利品()
